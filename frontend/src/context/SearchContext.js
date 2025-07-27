@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import  { createContext, useState, useEffect } from "react";
 import { fetchWithCache } from "../utils/api";
 
 export const SearchContext = createContext();
@@ -14,7 +14,7 @@ export const SearchProvider = ({ children }) => {
 
   // Fetch all tags once using centralized api helper
   useEffect(() => {
-    fetchWithCache("/api/manga/tag?limit=100")
+    fetchWithCache("/api/manga/tag")
       .then((json) => setTags(json.data || []))
       .catch((err) => console.error("Error loading tags:", err));
   }, []);
