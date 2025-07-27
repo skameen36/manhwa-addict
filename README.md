@@ -8,212 +8,157 @@
 > A modern, responsive single‑page React app for browsing, searching and reading manga via the MangaDex API.  
 > Features live search, category (tag) filtering, light/dark theme toggle, and a polished developer‑info modal.
 
+
 ---
 
 ## 📸 Screenshots
 
-| Home (Light)   | Home (Dark)    | Reader         |
-| -------------- | -------------- | -------------- |
-| ![light][light] | ![dark][dark] | ![reader][reader] |
-
-[light]: <img width="1903" height="911" alt="image" src="https://github.com/user-attachments/assets/cd3b118c-b8a2-49f3-b248-69a386e72e06" />
-  
-[dark]: <img width="1902" height="907" alt="image" src="https://github.com/user-attachments/assets/5cfa4919-108f-4af1-941c-6c1648b17d10" />
- 
-[reader]: <img width="1905" height="904" alt="image" src="https://github.com/user-attachments/assets/dd7e0679-a222-4f34-83c6-25edc9823351" />
-
+<p align="center">
+  <!-- Replace with actual screenshot links when available -->
+  <img src="https://placehold.co/400x250/E0E0E0/333333?text=Light+Mode" alt="Light Mode Screenshot" style="margin: 10px; border-radius: 8px;" />
+  <img src="https://placehold.co/400x250/333333/E0E0E0?text=Dark+Mode" alt="Dark Mode Screenshot" style="margin: 10px; border-radius: 8px;" />
+  <img src="https://placehold.co/400x250/A0A0A0/FFFFFF?text=Chapter+Reader" alt="Chapter Reader Screenshot" style="margin: 10px; border-radius: 8px;" />
+</p>
 
 ---
 
 ## 🚀 Live Demo
 
-Coming soon! (Deploying to Netlify / Vercel)
+🌐 [Live Demo on Netlify / Vercel — Coming Soon]
 
 ---
 
 ## ✨ Features
 
-- **Recent Updates**: fetches latest manga (`GET /manga?limit=20&includes[]=cover_art`)  
-- **Popular Manga**: shows completed series (`GET /manga?limit=20&includes[]=cover_art&status[]=completed`)  
-- **Search**: instant client‑side filtering by title  
-- **Categories**: filter by MangaDex tags (`GET /manga/tag?limit=100`)  
-- **Theme Toggle**: Light ↔ Dark with sun/moon animation (Framer Motion) and `localStorage` persistence  
-- **Developer Info**: modal with contact info and key contributions  
-- **Lazy Loading**: chapter images load on‑demand (Intersection Observer)  
-- **Client‑side Routing**: React Router v6 for list and chapter pages  
-- **API Caching**: in‑memory cache to reduce redundant network calls  
+* Recent Manga Updates
+* Popular Completed Manga
+* Instant Search & Client-side Filtering
+* Category (Tag) Filtering
+* Dark/Light Theme with Framer Motion
+* Chapter Reader with Lazy Image Loading
+* Responsive Layout & Clean UI
+* Developer Info Modal
+* API Caching for Optimized Performance
+* Pagination Support
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 18  
-- **Routing**: React Router v6  
-- **Bundler**: Parcel 2  
-- **Animation**: Framer Motion  
-- **CSS**: Custom properties ( `--bg-color`/`--fg-color` ) + modern flex/grid  
-- **State**: React Context (Search & Theme) + Hooks  
-- **API**: MangaDex OpenAPI (REST)  
+| Tech             | Usage               |
+| :--------------- | :------------------ |
+| React 18         | Frontend Framework  |
+| Parcel 2         | Bundler             |
+| React Router v6  | Routing             |
+| Framer Motion    | Theme Toggle Animations |
+| Tailwind CSS     | Styling + Custom Variables |
+| Context API      | State Management    |
+| MangaDex API     | Data Source (REST API) |
 
 ---
 
-## 📦 Installation
+## 🧑‍💻 Installation
 
-1. **Clone**  
-   ```bash
-   git clone https://github.com/your-username/SKMangaNest.git
-   cd SKMangaNest
-Install dependencies
-
-bash
-Copy
-Edit
+```bash
+git clone [https://github.com/your-username/SKMangaNest.git](https://github.com/your-username/SKMangaNest.git)
+cd SKMangaNest
 npm install
-# or
-yarn install
-Environment Variables
-Create a .env in the project root:
+npm start
 
-ini
-Copy
-Edit
+Opens at: http://localhost:1234
+
+⚙️ Environment Variables (Optional)
+Only needed if you use login-based endpoints in the future:
+
+Code snippet
+
 REACT_APP_MANGADEX_CLIENT_ID=your_client_id
 REACT_APP_MANGADEX_USERNAME=your_username
 REACT_APP_MANGADEX_PASSWORD=your_password
-Only needed if you implement the AccessTokens helper for authenticated endpoints.
 
-Start dev server
-
-bash
-Copy
-Edit
-npm start
-# opens http://localhost:1234
-Build for production
-
-bash
-Copy
-Edit
-npm run build
-Outputs to dist/.
 
 🗂️ Project Structure
-bash
-Copy
-Edit
-SKMangaNest/
-├── .env                  # API credentials (gitignored)
-├── index.html            # App entry
-├── index.css             # Global styles & CSS variables
-├── package.json
+MANHWA-ADDICT/
+├── .parcel-cache/
+├── backend/                   # Placeholder for future backend logic
+├── dist/                      # Parcel build output
 ├── frontend/
 │   └── src/
-│       ├── assets/       # Logo, sun/moon images
-│       ├── component/    # All React components
+│       ├── assets/            # Static assets (icons, logos, etc.)
+│       ├── components/        # All UI components
+│       │   ├── AccessTokens.js
+│       │   ├── Bulb.js
+│       │   ├── DeveloperInfoModal.js
 │       │   ├── Header.js
 │       │   ├── Home.js
 │       │   ├── MangaChapter.js
-│       │   ├── SettingsModal.js
-│       │   ├── DeveloperInfoModal.js
-│       │   └── CelestialToggle.js
-│       ├── utils/        # Context providers
+│       │   ├── Pagination.js
+│       │   └── SettingsModal.js
+│       ├── context/           # Context API for global state
 │       │   ├── SearchContext.js
 │       │   └── ThemeContext.js
-│       └── App.js        # Router & Context setup
-└── LICENSE
-📜 Usage
-Search by typing in the header search box.
+│       ├── hooks/             # Custom React hooks
+│       │   └── useManga.js
+│       ├── pages/             # Reserved for routed views (if added later)
+│       ├── utils/             # Helper functions and configs
+│       │   ├── App.js
+│       │   └── config.js
+├── node_modules/
+├── .env
+├── .gitignore
+├── index.css
+├── index.html
+├── package.json
+├── package-lock.json
+└── README.md
 
-Filter by clicking Categories, then pick a tag.
+🧠 How It Works
+Data Fetching:
 
-Toggle theme by clicking the swinging sun/moon icon.
+Uses fetchWithCache to avoid redundant API requests.
 
-View details via the ⚙️ button (Settings) or 👤 button (Developer Info).
+ThemeContext:
 
-Read chapters: click a cover → use Next/Previous buttons.
+Stores light/dark preference and syncs with localStorage.
 
-📖 How It Works
-Data fetching is centralized via a fetchWithCache wrapper:
+SearchContext:
 
-Caches JSON responses in a Map to avoid duplicate requests.
+Stores search query and selected tag globally.
 
-Supports dynamic URL construction (tags, status).
+Chapter Reader:
 
-SearchContext provides:
+Fetches chapter images using GET /at-home/server/{chapterId}
 
-searchQuery, setSearchQuery
-
-tags, selectedTagId, setSelectedTagId
-
-ThemeContext
-
-Manages darkMode state, writes to localStorage
-
-Adds/removes the .dark class on <html> to switch CSS variables
-
-CSS Variables
-
-css
-Copy
-Edit
-:root { --bg-color: #f5f5f5; --fg-color: #1e1e2e; }
-html.dark { --bg-color: #12121b; --fg-color: #e0e0e0; }
-body { background: var(--bg-color); color: var(--fg-color); }
-Chapter Reader
-
-Fetches chapter list via GET /manga/{id}/feed
-
-Loads pages from GET /at-home/server/{chapterId}
-
-Lazy‑loads images with react-intersection-observer
+Implements lazy loading with Intersection Observer.
 
 🛣️ Roadmap
-✅ Basic browsing & filtering
+✅ Completed Manga & Recent Updates
 
-✅ Theme toggle & persistence
+✅ Chapter Reading & Image Lazy Load
 
-✅ Developer Info modal
+✅ Tag Filtering & Search
 
-⚙️ User authentication & “My List”
+✅ Theme Switcher
 
-🔖 Bookmark & resume reading
+✅ Pagination Support
 
-🔁 Infinite scroll & pagination
+⏳ Bookmark/Resume Reading
 
-🧪 Unit & integration tests
+⏳ User Auth for My List (Optional)
 
-💬 Contributing
-Fork it
-
-Create a feature branch (git checkout -b feature/name)
-
-Commit your changes (git commit -m "feat: add …")
-
-Push to branch (git push origin feature/name)
-
-Open a Pull Request
-
-Please follow the Contributor Covenant.
+⏳ Deploy to Vercel / Netlify
 
 📄 License
-This project is licensed under the MIT License. See LICENSE for details.
+This project is licensed under the MIT License — see the LICENSE file.
 
-🙋‍♂️ Author
+🙋 Author
 Shaikh Ameen
 
-✉️ imameen36@gmail.com
+📧 imameen36@gmail.com
 
-🔗 LinkedIn • GitHub
+🌐 LinkedIn | GitHub
 
 📍 Amravati, Maharashtra, India
 
-pgsql
-Copy
-Edit
-
-> #### Why mention MangaDex API?
-> We rely on MangaDex’s public REST endpoints for all manga metadata, covers, tags and chapter data.  
-> This makes SKMangaNest a lightweight frontend that can be adapted to any manga‑hosting backend.
-
-Feel free to edit paths, badges, or screenshots to match your repo’s assets and final URLs!
-::contentReference[oaicite:0]{index=0}
+🔗 Why MangaDex API?
+We use the MangaDex open REST API to fetch all manga-related data, including covers, tags, chapters, and images — making this a pure frontend app with no server-side dependencies.
