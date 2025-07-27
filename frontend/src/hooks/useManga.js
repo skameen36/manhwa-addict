@@ -19,7 +19,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
 
    useEffect(() => {
 
-    let url = `/api/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`;
+    let url = `https://api.mangadex.org/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`;
      if (tagId) url += `&includedTags[]=${tagId}`
 
     fetchWithCache(url)
@@ -45,7 +45,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
    useEffect(() => {
 
     fetchWithCache(
-      "/api/manga?limit=20&includes[]=cover_art&status[]=completed"
+      "https://api.mangadex.org/manga?limit=20&includes[]=cover_art&status[]=completed"
     )
       .then((json) => {
         const mapped = json.data.map((m) => {

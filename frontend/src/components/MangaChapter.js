@@ -14,7 +14,7 @@ const MangaChapters = () => {
   const fetchChapters = async () => {
     try {
       const data = await fetchWithCache(
-        `/api/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
+        `https://api.mangadex.org/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
       );
      
 
