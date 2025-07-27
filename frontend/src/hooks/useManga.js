@@ -22,8 +22,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
     let url = `https://api.mangadex.org/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`
      if (tagId) url += `&includedTags[]=${tagId}`
 
--    fetchWithCache(url)
-+    fetchWithCache(url)
+    fetchWithCache(url)
        .then(json => {
          let list = mapData(json.data)
          if (language !== "all") {
