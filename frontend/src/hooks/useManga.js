@@ -19,7 +19,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
 
    useEffect(() => {
 
-    let url = `https://api.mangadex.org/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`;
+    let url = `/api/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`;
      if (tagId) url += `&includedTags[]=${tagId}`
 
     fetchWithCache(url)
