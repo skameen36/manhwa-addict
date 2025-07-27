@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { fetchWithCache } from "../utils/api";
 
 export const SearchContext = createContext();
 
@@ -11,14 +12,12 @@ export const SearchProvider = ({ children }) => {
   const [defaultLanguage, setDefaultLanguage] = useState("all");
   const [showNSFW, setShowNSFW] = useState(false);
 
-  // Fetch all tags once
+  // Fetch all tags once using centralized api helper
   useEffect(() => {
-    fetch("https://api.mangadex.org/manga/tag?limit=100")
-      .then((res) => res.json())
+    fetchWithCache("https://api.mangadex.org/manga/tag?limit=100")
       .then((json) => setTags(json.data || []))
       .catch((err) => console.error("Error loading tags:", err));
   }, []);
-
 
   return (
     <SearchContext.Provider
