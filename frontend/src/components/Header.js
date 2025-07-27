@@ -1,7 +1,7 @@
 import logo from "../assets/Skmanganest1.png";
 import CelestialToggle from "./Bulb";
 import { useContext, useState } from "react";
-import { SearchContext } from "../utils/SearchContext";
+import { SearchContext } from "../context/SearchContext";
 import { Link } from "react-router-dom";
 import SettingsModal from "./SettingsModal";
 import DeveloperInfoModal from "./DeveloperInfoModal";
@@ -40,11 +40,11 @@ const Header = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
 
-          <div className="categories-wrapper">
+          <div className="categories-wrapper ">
             <button className="btn" onClick={() => setOpen((o) => !o)}>
               {selectedTagId
                 ? tags.find((t) => t.id === selectedTagId)?.attributes.name.en
-                : "Categories"}
+                : "Genre"}
             </button>
 
             {open && (
@@ -74,7 +74,6 @@ const Header = () => {
           </div>
 
           <div className="user-options">
-            <button className="btn">My List</button>
             <button className="btn" onClick={() => setIsSettingsOpen(true)}>
               ⚙️
             </button>
@@ -82,7 +81,7 @@ const Header = () => {
               className="btn"
               onClick={() => setIsDeveloperInfoOpen(true)}
             >
-              👤
+              🔗
             </button>
           </div>
         </nav>

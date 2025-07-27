@@ -19,7 +19,6 @@ export const SearchProvider = ({ children }) => {
       .catch((err) => console.error("Error loading tags:", err));
   }, []);
 
-  console.log("SearchContext initialized with tags:", tags);
 
   return (
     <SearchContext.Provider

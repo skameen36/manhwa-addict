@@ -1,6 +1,6 @@
 import  { useContext } from "react";
-import { SearchContext } from "../utils/SearchContext";
-import { ThemeContext } from "../utils/ThemeContext";
+import { SearchContext } from "../context/SearchContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 
 export default function SettingsModal({ isOpen, onClose }) {

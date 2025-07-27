@@ -6,8 +6,8 @@ async function getAccessToken() {
         },
         body: new URLSearchParams({
             grant_type: "password",
-            username: process.env.REACT_APP_MANGADEX_USERNAME,  // Store in .env
-            password: process.env.REACT_APP_MANGADEX_PASSWORD,  // Store in .env
+            username: process.env.REACT_APP_MANGADEX_USERNAME,  
+            password: process.env.REACT_APP_MANGADEX_PASSWORD,  
             client_id: process.env.REACT_APP_MANGADEX_CLIENT_ID,  
             client_secret: process.env.REACT_APP_MANGADEX_CLIENT_SECRET  
         })
@@ -16,8 +16,8 @@ async function getAccessToken() {
     const data = await response.json();
     
     if (data.access_token) {
-        console.log("Access Token:", data.access_token);
-        console.log("Refresh Token:", data.refresh_token);  // Store this for refreshing later
+        // console.log("Access Token:", data.access_token);
+        // console.log("Refresh Token:", data.refresh_token);  
         return data;
     } else {
         console.error("Failed to get access token:", data);

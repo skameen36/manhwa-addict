@@ -1,12 +1,10 @@
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import MangaList from "./component/Home";
-import MangaChapters from "./component/MangaChapter";
-import Header from "./component/Header";
-import { SearchProvider } from "./utils/SearchContext";
-import {ThemeProvider} from "./utils/ThemeContext";
+import MangaList from "./components/Home";
+import MangaChapters from "./components/MangaChapter";
+import Header from "./components/Header";
+import { SearchProvider } from "./context/SearchContext";
+import {ThemeProvider} from "./context/ThemeContext";
 
 const App = () => {
   return (
@@ -44,18 +42,3 @@ root.render(
   </ThemeProvider>
 );
 
-// const App = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<MangaList />} />
-//         <Route path="/manga/:mangaId" element={<MangaChapters />} />
-//       </Routes>
-//     </Router>
-//   );
-// };
-
-// const root = ReactDOM.createRoot(document.getElementById("root"));
-// root.render(<App />);
-
-// export default App;

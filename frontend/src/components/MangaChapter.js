@@ -1,79 +1,4 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-
-// const MangaChapters = () => {
-//   const { mangaId } = useParams();
-//   const [chapters, setChapters] = useState([]);
-//   const [currentChapter, setCurrentChapter] = useState(null);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     fetchChapters();
-//   }, [mangaId]);
-
-//   const fetchChapters = async () => {
-//     try {
-//       const response = await fetch(`https://api.mangadex.org/manga/${mangaId}/feed?limit=10`);
-//       const data = await response.json();
-
-//       setChapters(data.data);
-//       if (data.data.length > 0) setCurrentChapter(data.data[0]);
-//     } catch (error) {
-//       console.error("Error fetching chapters:", error);
-//     }
-//   };
-
-//   const getImageUrls = async (chapterId) => {
-//     try {
-//       const response = await fetch(`https://api.mangadex.org/at-home/server/${chapterId}`);
-//       const data = await response.json();
-
-//       return data.chapter.data.map(img => `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}`);
-//     } catch (error) {
-//       console.error("Error fetching chapter images:", error);
-//       return [];
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (currentChapter) {
-//       getImageUrls(currentChapter.id).then(images => setCurrentChapter(prev => ({ ...prev, images })));
-//     }
-//   }, [currentChapter]);
-
-//   const changeChapter = (direction) => {
-//     const currentIndex = chapters.findIndex(ch => ch.id === currentChapter?.id);
-//     if (currentIndex === -1) return;
-
-//     const newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
-//     if (newIndex >= 0 && newIndex < chapters.length) {
-//       setCurrentChapter(chapters[newIndex]);
-//     }
-//   };
-
-//   return (
-//     <div className="chapter-container">
-//       <h2>Chapter {currentChapter?.attributes?.chapter}</h2>
-
-//       <div className="images-column">
-//         {currentChapter?.images?.map((url, index) => (
-//           <img key={index} src={url} alt={`Page ${index + 1}`} />
-//         ))}
-//       </div>
-
-//       <div className="chapter-controls">
-//         <button onClick={() => changeChapter("prev")} disabled={!chapters.length || currentChapter === chapters[0]}>Prev Chapter</button>
-//         <button onClick={() => changeChapter("next")} disabled={!chapters.length || currentChapter === chapters[chapters.length - 1]}>Next Chapter</button>
-//       </div>
-
-//       <button onClick={() => navigate("/")}>Back to Manga List</button>
-//     </div>
-//   );
-// };
-
-// export default MangaChapters;
-
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
@@ -84,7 +9,7 @@ const MangaChapters = () => {
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch all chapters of the manga
+
   const fetchChapters = async () => {
     try {
       const response = await fetch(
@@ -94,8 +19,8 @@ const MangaChapters = () => {
 
       if (data.data && data.data.length > 0) {
         setChapters(data.data);
-        setCurrentChapterIndex(0); // Set the first chapter as default
-        getImageUrls(data.data[0].id); // Fetch images for the first chapter
+        setCurrentChapterIndex(0); 
+        getImageUrls(data.data[0].id); 
       } else {
         console.error("No chapters found for this manga.");
       }
@@ -104,7 +29,7 @@ const MangaChapters = () => {
     }
   };
 
-  // Fetch image URLs for the current chapter
+
   const getImageUrls = async (chapterId) => {
     try {
       const response = await fetch(
@@ -125,7 +50,7 @@ const MangaChapters = () => {
     }
   };
 
-  // Handle Next Chapter Button
+
   const handleNextChapter = () => {
     if (currentChapterIndex < chapters.length - 1) {
       const nextIndex = currentChapterIndex + 1;
@@ -134,7 +59,7 @@ const MangaChapters = () => {
     }
   };
 
-  // Handle Previous Chapter Button
+
   const handlePrevChapter = () => {
     if (currentChapterIndex > 0) {
       const prevIndex = currentChapterIndex - 1;
@@ -143,7 +68,7 @@ const MangaChapters = () => {
     }
   };
 
-  // Fetch chapters on component mount
+
   useEffect(() => {
     fetchChapters();
   }, [mangaId]);
@@ -196,7 +121,7 @@ const MangaChapters = () => {
   );
 };
 
-// Lazy Image Component for Optimized Loading
+
 const LazyImage = ({ src, alt }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,

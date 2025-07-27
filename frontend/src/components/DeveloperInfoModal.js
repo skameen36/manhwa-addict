@@ -11,7 +11,7 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           ×
         </button>
 
-        {/* Header */}
+       
         <div className="devinfo-header">
           <h2 className="devinfo-name">Shaikh Ameen</h2>
           <p className="devinfo-title">
@@ -19,7 +19,7 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           </p>
         </div>
 
-        {/* Contact Info */}
+       
         <div className="devinfo-contact">
           <a href="mailto:imameen36@gmail.com">📧 imameen36@gmail.com</a>
           <a href="tel:+918625802122">📞 +91 8625802122</a>
@@ -30,7 +30,7 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           <span>📍 Amravati, Maharashtra</span>
         </div>
 
-        {/* Key Contributions */}
+       
         <div className="devinfo-body">
           <h3>Key Contributions</h3>
           <ul>
@@ -57,7 +57,7 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           </ul>
         </div>
 
-        {/* Footer */}
+       
         <div className="devinfo-footer">
           <span>
             <strong>Total Experience:</strong> 2 years 5 months
