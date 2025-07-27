@@ -45,7 +45,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
    useEffect(() => {
 
     fetchWithCache(
-      "https://api.mangadex.org/manga?limit=20&includes[]=cover_art&status[]=completed"
+      "/api/manga?limit=20&includes[]=cover_art&status[]=completed"
     )
       .then((json) => {
         const mapped = json.data.map((m) => {
