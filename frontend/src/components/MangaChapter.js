@@ -1,6 +1,7 @@
 import  { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
+import { fetchWithCache } from "../utils/api";
 
 const MangaChapters = () => {
   const { mangaId } = useParams();
@@ -12,10 +13,10 @@ const MangaChapters = () => {
 
   const fetchChapters = async () => {
     try {
-      const response = await fetch(
-        `https://api.mangadex.org/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
+      const data = await fetchWithCache(
+        `/api/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
       );
-      const data = await response.json();
+     
 
       if (data.data && data.data.length > 0) {
         setChapters(data.data);
@@ -32,10 +33,8 @@ const MangaChapters = () => {
 
   const getImageUrls = async (chapterId) => {
     try {
-      const response = await fetch(
-        `https://api.mangadex.org/at-home/server/${chapterId}`
-      );
-      const data = await response.json();
+      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`);
+    
       if (data.chapter && data.chapter.data) {
         const urls = data.chapter.data.map(
           (img) => `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}`

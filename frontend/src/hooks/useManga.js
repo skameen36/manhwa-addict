@@ -19,7 +19,7 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
 
    useEffect(() => {
 
-    let url = `https://api.mangadex.org/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`
+    let url = `/api/manga?limit=${PAGE_SIZE}&offset=${offset}&includes[]=cover_art`;
      if (tagId) url += `&includedTags[]=${tagId}`
 
     fetchWithCache(url)
@@ -44,19 +44,21 @@ export function useManga({ tagId="", language="all", showNSFW=false, page=1 }) {
 
    useEffect(() => {
 
-    fetchWithCache("https://api.mangadex.org/manga?limit=20&includes[]=cover_art&status[]=completed")
-       .then(json => {
-         const mapped = json.data.map(m => {
-           const art = m.relationships.find(r => r.type==="cover_art")
-           return {
-             id: m.id,
-             title: m.attributes.title?.en ?? "No Title",
-             coverFilename: art?.attributes?.fileName,
-           }
-         })
-         setCompleted(mapped)
-       })
-       .catch(console.error)
+    fetchWithCache(
+      "/api/manga?limit=20&includes[]=cover_art&status[]=completed"
+    )
+      .then((json) => {
+        const mapped = json.data.map((m) => {
+          const art = m.relationships.find((r) => r.type === "cover_art");
+          return {
+            id: m.id,
+            title: m.attributes.title?.en ?? "No Title",
+            coverFilename: art?.attributes?.fileName,
+          };
+        });
+        setCompleted(mapped);
+      })
+      .catch(console.error);
    }, [])
 
    return completed

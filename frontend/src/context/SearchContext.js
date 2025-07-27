@@ -14,7 +14,7 @@ export const SearchProvider = ({ children }) => {
 
   // Fetch all tags once using centralized api helper
   useEffect(() => {
-    fetchWithCache("https://api.mangadex.org/manga/tag?limit=100")
+    fetchWithCache("/api/manga/tag?limit=100")
       .then((json) => setTags(json.data || []))
       .catch((err) => console.error("Error loading tags:", err));
   }, []);
