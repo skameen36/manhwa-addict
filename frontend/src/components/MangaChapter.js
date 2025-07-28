@@ -28,14 +28,15 @@ const MangaChapters = () => {
     }
   };
 
+  // No fetchWithCache here. The <LazyImage> component will directly use the URL.
   const getImageUrls = async (chapterId) => {
     try {
-      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`);
+      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`); // This fetches JSON
 
       if (data.chapter && data.chapter.data) {
         const urls = data.chapter.data.map(
-          (img) =>
-            `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}` // CHANGE BACK TO DIRECT CDN URL
+          // <--- Use proxy URL for chapter images too
+          (img) => `/image-proxy/data/${data.chapter.hash}/${img}`
         );
         setImages(urls);
       } else {

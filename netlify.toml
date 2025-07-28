@@ -1,26 +1,18 @@
+# In netlify.toml
 [build]
-  command   = "npm run build"
+  functions = "netlify/functions"
   publish   = "dist"
 
-# Proxy any /api/* request to the MangaDex API
 [[redirects]]
-from = "/api/*"
-to = "https://api.mangadex.org/:splat"
-status = 200
-force = true
-
-
-    # NEW: Image proxy redirect
-[[redirects]]
-  from  = "/image-proxy/*"  # Your app will request images from /image-proxy/...
-  to    = "/.netlify/functions/image-proxy" # This points to your function
+  from  = "/api/*"
+  to    = "https://api.mangadex.org/:splat"
   status = 200
   force  = true
-  
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-
+# This is the NEW/CORRECTED redirect for the image proxy
+[[redirects]]
+  from  = "/image-proxy/*"  # The path your frontend will request
+  to    = "/.netlify/functions/image-proxy" # This MUST point to your function path
+  status = 200              # Keep as 200 for an internal rewrite
+  force  = true
 
