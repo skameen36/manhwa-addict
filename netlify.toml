@@ -9,8 +9,8 @@ to = "https://api.mangadex.org/:splat"
 status = 200
 force = true
 
-[[redirects]]
-from = "/apii/*"
-to = "https://uploads.mangadex.org/:splat"
-status = 200
-force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

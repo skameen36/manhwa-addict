@@ -23,7 +23,7 @@ const MangaList = () => {
 
   const getCover = (m) =>
     m.coverFilename
-      ? `apii/covers/${m.id}/${m.coverFilename}`
+      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}`
       : "/placeholder.jpg";
 
   return (
