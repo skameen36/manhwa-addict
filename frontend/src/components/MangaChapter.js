@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { fetchWithCache } from "../utils/api";
@@ -10,18 +10,16 @@ const MangaChapters = () => {
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
-
   const fetchChapters = async () => {
     try {
       const data = await fetchWithCache(
         `/api/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
       );
-     
 
       if (data.data && data.data.length > 0) {
         setChapters(data.data);
-        setCurrentChapterIndex(0); 
-        getImageUrls(data.data[0].id); 
+        setCurrentChapterIndex(0);
+        getImageUrls(data.data[0].id);
       } else {
         console.error("No chapters found for this manga.");
       }
@@ -30,14 +28,14 @@ const MangaChapters = () => {
     }
   };
 
-
   const getImageUrls = async (chapterId) => {
     try {
       const data = await fetchWithCache(`/api/at-home/server/${chapterId}`);
-    
+
       if (data.chapter && data.chapter.data) {
         const urls = data.chapter.data.map(
-          (img) => `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}`
+          (img) =>
+            `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}`
         );
         setImages(urls);
       } else {
@@ -49,7 +47,6 @@ const MangaChapters = () => {
     }
   };
 
-
   const handleNextChapter = () => {
     if (currentChapterIndex < chapters.length - 1) {
       const nextIndex = currentChapterIndex + 1;
@@ -58,7 +55,6 @@ const MangaChapters = () => {
     }
   };
 
-
   const handlePrevChapter = () => {
     if (currentChapterIndex > 0) {
       const prevIndex = currentChapterIndex - 1;
@@ -66,7 +62,6 @@ const MangaChapters = () => {
       getImageUrls(chapters[prevIndex].id);
     }
   };
-
 
   useEffect(() => {
     fetchChapters();
@@ -119,7 +114,6 @@ const MangaChapters = () => {
     </div>
   );
 };
-
 
 const LazyImage = ({ src, alt }) => {
   const { ref, inView } = useInView({

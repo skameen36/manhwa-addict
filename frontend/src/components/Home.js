@@ -16,7 +16,6 @@ const MangaList = () => {
   });
   const completed = useCompletedManga();
 
-
   const display = mangaList.filter((m) =>
     m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -66,7 +65,6 @@ const MangaList = () => {
                   ))}
                 </div>
 
-            
                 <div className="pagination">
                   <button
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}

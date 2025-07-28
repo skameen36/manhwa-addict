@@ -1,4 +1,4 @@
-import  { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { fetchWithCache } from "../utils/api";
 
 export const SearchContext = createContext();
