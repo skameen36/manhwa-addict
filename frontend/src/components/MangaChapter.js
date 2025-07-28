@@ -34,8 +34,8 @@ const MangaChapters = () => {
 
       if (data.chapter && data.chapter.data) {
         const urls = data.chapter.data.map(
-          // <--- Point to your proxy for chapter images too
-          (img) => `/image-proxy/data/${data.chapter.hash}/${img}`
+          (img) =>
+            `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}` // CHANGE BACK TO DIRECT CDN URL
         );
         setImages(urls);
       } else {

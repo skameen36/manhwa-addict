@@ -23,7 +23,7 @@ const MangaList = () => {
  
   const getCover = (m) =>
     m.coverFilename
-      ? `/image-proxy/covers/${m.id}/${m.coverFilename}.256.jpg` // <--- Point to your proxy
+      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}.256.jpg` // CHANGE BACK TO DIRECT CDN URL
       : "/placeholder.jpg";
 
   return (
