@@ -20,9 +20,10 @@ const MangaList = () => {
     m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+ 
   const getCover = (m) =>
     m.coverFilename
-      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}`
+      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}.256.jpg`
       : "/placeholder.jpg";
 
   return (
