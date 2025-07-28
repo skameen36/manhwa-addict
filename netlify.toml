@@ -8,3 +8,9 @@ from = "/api/*"
 to = "https://api.mangadex.org/:splat"
 status = 200
 force = true
+
+[[redirects]]
+from = "/apii/*"
+to = "https://uploads.mangadex.org/:splat"
+status = 200
+force = true
