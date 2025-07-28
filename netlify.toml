@@ -10,7 +10,17 @@ status = 200
 force = true
 
 
+    # NEW: Image proxy redirect
+[[redirects]]
+  from  = "/image-proxy/*"  # Your app will request images from /image-proxy/...
+  to    = "/.netlify/functions/image-proxy" # This points to your function
+  status = 200
+  force  = true
+  
+
 [[headers]]
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+
+
