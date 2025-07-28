@@ -4,7 +4,7 @@
 
 # Proxy any /api/* request to the MangaDex API
 [[redirects]]
-  from   = "/api/:splat"
-  to     = "https://api.mangadex.org/:splat"
-  status = 200
-  force  = true
+from = "/api/*"
+to = "https://api.mangadex.org/:splat"
+status = 200
+force = true
