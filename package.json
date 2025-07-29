@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel index.html",
     "start": "npx parcel index.html",
     "build": "parcel build index.html --dist-dir dist",
     "clean": "rimraf .parcel-cache dist"
@@ -14,13 +15,13 @@
   "dependencies": {
     "framer-motion": "^12.4.0",
     "node-fetch": "^2.7.0",
-    "parcel": "^2.13.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-intersection-observer": "^9.15.1",
     "react-router-dom": "^6.28.1"
   },
   "devDependencies": {
+    "parcel": "^2.15.4",
     "process": "^0.11.10",
     "rimraf": "^6.0.1"
   }
