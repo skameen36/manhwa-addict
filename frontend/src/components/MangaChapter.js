@@ -28,19 +28,15 @@ const MangaChapters = () => {
     }
   };
 
-  // In mangaChapter.js
+
   const getImageUrls = async (chapterId) => {
     try {
-      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`);
+      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`); // This still fetches JSON from MangaDex API
 
       if (data.chapter && data.chapter.data) {
         const urls = data.chapter.data.map(
-          // Chapter images typically need the original filename, not necessarily a .256.jpg suffix.
-          // MangaDex chapter image URLs are usually:
-          // `https://uploads.mangadex.org/data/{hash}/{filename}`
-          // So, this part of your code was likely already correct if chapter images were working locally.
-          (img) =>
-            `https://uploads.mangadex.org/data/${data.chapter.hash}/${img}`
+          // Chapter images are also proxied
+          (img) => `/image-proxy/data/${data.chapter.hash}/${img}` // <--- Use your Vercel proxy path
         );
         setImages(urls);
       } else {

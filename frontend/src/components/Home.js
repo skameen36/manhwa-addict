@@ -20,10 +20,10 @@ const MangaList = () => {
     m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // In home.js
+ 
   const getCover = (m) =>
     m.coverFilename
-      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}.256.jpg` // <--- THIS IS THE KEY!
+      ? `/image-proxy/covers/${m.id}/${m.coverFilename}.256.jpg` // <--- Use your Vercel proxy path
       : "/placeholder.jpg";
 
   return (
