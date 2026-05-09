@@ -24,9 +24,28 @@
 
 ## 🚀 Live Demo
 
-🌐 [Live Demo on Netlify / Vercel — Coming Soon]
+🌐 [Live Demo on Vercel — Deployed]
 
 ---
+
+## 📦 Deployment
+
+This project is configured for deployment on Vercel.
+
+### Prerequisites
+- Vercel account
+- MangaDex API credentials (optional, for enhanced features)
+
+### Deploy Steps
+1. Push your code to GitHub
+2. Connect your GitHub repo to Vercel
+3. Set environment variables in Vercel dashboard:
+   - `MANGADEX_API`: `https://api.mangadex.org/`
+   - `PARCEL_MANGADEX_CLIENT_ID`: Your MangaDex client ID
+   - Other credentials as needed
+4. Deploy!
+
+The `vercel.json` handles the build configuration and API routes.
 
 ## ✨ Features
 

@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { SearchContext } from "../context/SearchContext";
 import { useManga, useCompletedManga } from "../hooks/useManga";
 
+
 const MangaList = () => {
   const { searchQuery, selectedTagId, defaultLanguage, showNSFW } =
     useContext(SearchContext);
   const [page, setPage] = useState(1);
+
 
   const mangaList = useManga({
     tagId: selectedTagId,
@@ -16,14 +18,14 @@ const MangaList = () => {
   });
   const completed = useCompletedManga();
 
+
   const display = mangaList.filter((m) =>
     m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
- 
   const getCover = (m) =>
     m.coverFilename
-      ? `/image-proxy/covers/${m.id}/${m.coverFilename}.256.jpg` // <--- Use your Vercel proxy path
+      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}.256.jpg`
       : "/placeholder.jpg";
 
   return (

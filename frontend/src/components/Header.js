@@ -1,4 +1,3 @@
-import logo from "../assets/Skmanganest1.png";
 import CelestialToggle from "./Bulb";
 import { useContext, useState } from "react";
 import { SearchContext } from "../context/SearchContext";
@@ -7,6 +6,8 @@ import SettingsModal from "./SettingsModal";
 import DeveloperInfoModal from "./DeveloperInfoModal";
 
 const Header = () => {
+
+  const logoUrl = new URL("../assets/Skmanganest1.png", import.meta.url);
 
   const { searchQuery, setSearchQuery, tags, selectedTagId, setSelectedTagId } =
     useContext(SearchContext);
@@ -25,7 +26,7 @@ const Header = () => {
       <header className="header">
         <Link to="/" className="logo-link">
           <div className="logo">
-            <img src={logo} alt="Logo" className="logo-img" />
+            <img src={logoUrl} alt="Logo" className="logo-img" />
             SKMangaNest
           </div>
         </Link>

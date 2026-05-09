@@ -2,10 +2,7 @@
 // This will be a Vercel Serverless Function.
 // Vercel automatically detects files in the 'api' directory as functions.
 
-// Make sure 'node-fetch' is installed in your project's package.json
-// npm install node-fetch@2 (if not already)
-
-module.exports = async (req, res) => {
+export default async (req, res) => {
   // Extract the original image path from the Vercel Function request
   // Example req.url: /api/image-proxy/covers/mangaId/filename.jpg
   // We want: /covers/mangaId/filename.jpg or /data/hash/filename

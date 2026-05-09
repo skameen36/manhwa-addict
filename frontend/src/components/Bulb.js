@@ -1,11 +1,12 @@
 import  { useContext } from "react";
 import { motion } from "framer-motion";
-import bulb from "../assets/bulb3.png";
-import bulbOff from "../assets/bulb.png";
 import { ThemeContext } from "../context/ThemeContext";
 
 const CelestialToggle = () => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+
+  const bulbUrl = new URL("../assets/bulb3.png", import.meta.url);
+  const bulbOff = new URL("../assets/bulb.png", import.meta.url);
 
   return (
     <div className="scene">
@@ -28,7 +29,7 @@ const CelestialToggle = () => {
           transition={{ type: "spring", stiffness: 50, damping: 5 }}
         >
           <img
-            src={darkMode ? bulbOff : bulb}
+            src={darkMode ? bulbOff : bulbUrl.href}
             alt={darkMode ? "Moon" : "Sun"}
             className="celestial-img"
           />

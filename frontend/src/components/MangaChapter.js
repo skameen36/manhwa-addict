@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { fetchWithCache } from "../utils/api";
 
+
 const MangaChapters = () => {
   const { mangaId } = useParams();
   const [chapters, setChapters] = useState([]);
@@ -13,7 +14,7 @@ const MangaChapters = () => {
   const fetchChapters = async () => {
     try {
       const data = await fetchWithCache(
-        `/api/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
+        `/manga/${mangaId}/feed?limit=500&order[chapter]=asc`
       );
 
       if (data.data && data.data.length > 0) {
@@ -28,15 +29,13 @@ const MangaChapters = () => {
     }
   };
 
-
   const getImageUrls = async (chapterId) => {
     try {
-      const data = await fetchWithCache(`/api/at-home/server/${chapterId}`); // This still fetches JSON from MangaDex API
+      const data = await fetchWithCache(`/at-home/server/${chapterId}`);
 
-      if (data.chapter && data.chapter.data) {
+      if (data.chapter && data.chapter.data && data.baseUrl) {
         const urls = data.chapter.data.map(
-          // Chapter images are also proxied
-          (img) => `/image-proxy/data/${data.chapter.hash}/${img}` // <--- Use your Vercel proxy path
+          (img) => `${data.baseUrl}/data/${data.chapter.hash}/${img}`
         );
         setImages(urls);
       } else {
