@@ -35,7 +35,7 @@ const MangaChapters = () => {
 
       if (data.chapter && data.chapter.data && data.baseUrl) {
         const urls = data.chapter.data.map(
-          (img) => `${data.baseUrl}/data/${data.chapter.hash}/${img}`
+          (img) => `/api/image-proxy/data/${data.chapter.hash}/${img}`
         );
         setImages(urls);
       } else {

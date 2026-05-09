@@ -25,7 +25,7 @@ const MangaList = () => {
 
   const getCover = (m) =>
     m.coverFilename
-      ? `https://uploads.mangadex.org/covers/${m.id}/${m.coverFilename}.256.jpg`
+      ? `/api/image-proxy/covers/${m.id}/${m.coverFilename}.256.jpg`
       : "/placeholder.jpg";
 
   return (

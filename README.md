@@ -67,6 +67,18 @@ The `vercel.json` handles the build configuration and API routes.
 | Tech             | Usage               |
 | :--------------- | :------------------ |
 | React 18         | Frontend Framework  |
+| Parcel           | Bundler             |
+| Vercel           | Hosting & Serverless |
+| MangaDex API     | Manga Data Source   |
+
+## 🔧 CORS Solution
+
+This project uses Vercel serverless functions to proxy all MangaDex API requests, solving CORS issues in production:
+
+- `/api/mangadex` - Proxies JSON API requests
+- `/api/image-proxy` - Proxies image requests
+
+This ensures reliable API access from any domain.
 | Parcel 2         | Bundler             |
 | React Router v6  | Routing             |
 | Framer Motion    | Theme Toggle Animations |
