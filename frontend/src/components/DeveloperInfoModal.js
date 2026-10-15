@@ -1,3 +1,6 @@
+// frontend/src/components/DeveloperInfoModal.js
+import React from "react";
+
 export default function DeveloperInfoModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
@@ -6,62 +9,91 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
       <div
         className="modal-panel devinfo-panel"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="devinfo-title"
       >
-        <button className="close-icon" onClick={onClose}>
-          ×
+        <button
+          type="button"
+          className="modal-close-btn"
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          ✕
         </button>
 
-       
         <div className="devinfo-header">
-          <h2 className="devinfo-name">Shaikh Ameen</h2>
-          <p className="devinfo-title">
-            Software Associate – Frontend Developer
-          </p>
+          <div className="devinfo-avatar">SA</div>
+          <div>
+            <h2 id="devinfo-title" className="devinfo-name">
+              Shaikh Ameen
+            </h2>
+            <p className="devinfo-title-text">
+              Software Associate – Frontend Developer
+            </p>
+            <span className="devinfo-badge">📍 Amravati, Maharashtra</span>
+          </div>
         </div>
 
-       
-        <div className="devinfo-contact">
-          <a href="mailto:imameen36@gmail.com">📧 imameen36@gmail.com</a>
-          <a href="tel:+918625802122">📞 +91 8625802122</a>
-          <a href="https://www.linkedin.com/in/ameen-shaikh-972b2b233">
-            🔗 linkedin.com/in/ameen-shaikh-972b2b233
+        <div className="devinfo-links">
+          <a
+            href="mailto:imameen36@gmail.com"
+            className="devinfo-link-chip"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            📧 imameen36@gmail.com
           </a>
-          <a href="https://github.com/skameen36">💻 github.com/skameen36</a>
-          <span>📍 Amravati, Maharashtra</span>
+          <a href="tel:+918625802122" className="devinfo-link-chip">
+            📞 +91 8625802122
+          </a>
+          <a
+            href="https://www.linkedin.com/in/ameen-shaikh-972b2b233"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="devinfo-link-chip"
+          >
+            🔗 LinkedIn Profile
+          </a>
+          <a
+            href="https://github.com/skameen36"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="devinfo-link-chip"
+          >
+            💻 GitHub / skameen36
+          </a>
         </div>
 
-       
         <div className="devinfo-body">
-          <h3>Key Contributions</h3>
-          <ul>
-            <li>Set up development environment (VS Code, Node.js, tooling).</li>
-            <li>Built responsive UIs with React, HTML, CSS, Tailwind.</li>
-            <li>
-              Implemented state management via React Hooks (useState,
-              useEffect).
-            </li>
-            <li>Created reusable components: forms, modals, tables, inputs.</li>
-            <li>
-              Applied pagination & filtering for efficient list rendering.
-            </li>
-            <li>Integrated React Router: nested layouts, route protection.</li>
-            <li>Leveraged lazy loading to optimize bundle size.</li>
-            <li>Managed REST API data flow and seamless UI interaction.</li>
-            <li>
-              Practiced conditional rendering, form validation, clean
-              architecture.
-            </li>
-            <li>
-              Participated in Agile cycles: testing, debugging, code reviews.
-            </li>
+          <h3 className="section-label">Core Competencies</h3>
+          <div className="skills-cloud">
+            <span className="skill-pill">React 18</span>
+            <span className="skill-pill">JavaScript (ES6+)</span>
+            <span className="skill-pill">REST APIs & Serverless</span>
+            <span className="skill-pill">State Management</span>
+            <span className="skill-pill">Responsive Design</span>
+            <span className="skill-pill">Parcel & Webpack</span>
+            <span className="skill-pill">Tailwind CSS / Vanilla CSS</span>
+            <span className="skill-pill">Git & Vercel CI/CD</span>
+          </div>
+
+          <h3 className="section-label">Key Highlights</h3>
+          <ul className="devinfo-list">
+            <li>Architected production-ready single-page application with React Router v6 and Context API.</li>
+            <li>Designed high-performance serverless proxies on Vercel to overcome cross-origin CORS limitations.</li>
+            <li>Optimized asset loading with lazy loading, in-flight deduplication, and intelligent TTL caching.</li>
+            <li>Crafted sleek responsive design with smooth animations and dark/light mode themes.</li>
           </ul>
         </div>
 
-       
         <div className="devinfo-footer">
           <span>
-            <strong>Total Experience:</strong> 2 years 5 months
+            <strong>Experience:</strong> 2+ Years Professional Frontend
           </span>
+          <button type="button" className="btn-close-accent" onClick={onClose}>
+            Done
+          </button>
         </div>
       </div>
     </div>

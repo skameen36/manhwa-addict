@@ -1,110 +1,269 @@
-import { useContext, useState } from "react";
+// frontend/src/components/Home.js
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { SearchContext } from "../context/SearchContext";
-import { useManga, useCompletedManga } from "../hooks/useManga";
+import { useManga, usePopularManga, useFeaturedManga } from "../hooks/useManga";
+import MangaCard from "./MangaCard";
+import Pagination from "./Pagination";
+import { getMangaCoverUrl } from "../utils/api";
 
+export default function Home() {
+  const {
+    debouncedQuery,
+    selectedTagId,
+    selectedTagName,
+    selectTag,
+    defaultLanguage,
+    showNSFW,
+    sortOrder,
+    statusFilter,
+    setStatusFilter,
+    resetFilters,
+  } = useContext(SearchContext);
 
-const MangaList = () => {
-  const { searchQuery, selectedTagId, defaultLanguage, showNSFW } =
-    useContext(SearchContext);
   const [page, setPage] = useState(1);
 
+  // Reset to page 1 whenever search, genre, sort, or status filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQuery, selectedTagId, sortOrder, statusFilter, defaultLanguage, showNSFW]);
 
-  const mangaList = useManga({
+  const { manga, loading, error, totalPages, total, refetch } = useManga({
+    searchQuery: debouncedQuery,
     tagId: selectedTagId,
     language: defaultLanguage,
     showNSFW,
+    sortOrder,
+    statusFilter,
     page,
   });
-  const completed = useCompletedManga();
 
+  const { popular, loading: popularLoading } = usePopularManga();
+  const { featured, loading: featuredLoading } = useFeaturedManga();
 
-  const display = mangaList.filter((m) =>
-    m.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const getCover = (m) =>
-    m.coverFilename
-      ? `/api/image-proxy/covers/${m.id}/${m.coverFilename}.256.jpg`
-      : "/placeholder.jpg";
+  // Pick top featured item for hero banner
+  const heroItem = featured && featured.length > 0 ? featured[0] : null;
 
   return (
-    <div className="app">
-      <main className="main-content">
-        <section className="notifications">
-          <div className="notification">📢 New chapters …</div>
-          <div className="notification">⏳ Upcoming updates …</div>
-          <span className="section-title">Recent Updates</span>
+    <div className="home-container">
+      {/* Hero Spotlight Banner (Visible when no active search) */}
+      {!debouncedQuery && heroItem && (
+        <section className="hero-banner">
+          <div className="hero-backdrop" />
+          <div className="hero-content">
+            <div className="hero-badge">⭐ SPOTLIGHT MANGA</div>
+            <h1 className="hero-title">{heroItem.title}</h1>
+            <p className="hero-desc">
+              {heroItem.description
+                ? heroItem.description.slice(0, 180) + "…"
+                : "Immerse yourself in top-rated manga and manhwa adventures with high-definition chapters."}
+            </p>
+            {heroItem.tags && heroItem.tags.length > 0 && (
+              <div className="hero-tags">
+                {heroItem.tags.map((tag, idx) => (
+                  <span key={idx} className="hero-tag-pill">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div className="hero-actions">
+              <Link to={`/manga/${heroItem.id}`} className="hero-btn-primary">
+                📖 Start Reading
+              </Link>
+            </div>
+          </div>
+          {heroItem.coverFilename && (
+            <div className="hero-poster-wrap">
+              <img
+                src={getMangaCoverUrl(heroItem.id, heroItem.coverFilename, "512")}
+                alt={heroItem.title}
+                className="hero-poster"
+              />
+            </div>
+          )}
         </section>
+      )}
 
-        <div className="content-wrapper">
-          {!mangaList.length ? (
-            <h1>Loading…</h1>
-          ) : (
-            <>
-              <div className="grid">
-                <div className="manga-list">
-                  {display.map((m) => (
-                    <Link
-                      key={m.id}
-                      className="comic-card"
-                      to={`/manga/${m.id}`}
-                    >
-                      <div className="comic-header center">
-                        <img
-                          src={getCover(m)}
-                          alt={m.title}
-                          className="comic-thumbnail"
-                        />
-                      </div>
-                      <div className="comic-details">
-                        <h3>
-                          {m.title.length > 30
-                            ? `${m.title.slice(0, 30)}…`
-                            : m.title}
-                        </h3>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+      {/* Main Content Layout with Grid and Sidebar */}
+      <div className="home-layout">
+        <main className="catalog-main">
+          {/* Active Filter Chips and Status Tabs */}
+          <div className="catalog-header">
+            <div className="filter-tabs">
+              <button
+                type="button"
+                className={`filter-tab ${statusFilter === "all" ? "active" : ""}`}
+                onClick={() => setStatusFilter("all")}
+              >
+                All Status
+              </button>
+              <button
+                type="button"
+                className={`filter-tab ${statusFilter === "ongoing" ? "active" : ""}`}
+                onClick={() => setStatusFilter("ongoing")}
+              >
+                Ongoing
+              </button>
+              <button
+                type="button"
+                className={`filter-tab ${statusFilter === "completed" ? "active" : ""}`}
+                onClick={() => setStatusFilter("completed")}
+              >
+                Completed
+              </button>
+            </div>
 
-                <div className="pagination">
+            {/* Total Results Count */}
+            {!loading && total > 0 && (
+              <span className="results-count">
+                {total.toLocaleString()} titles found
+              </span>
+            )}
+          </div>
+
+          {/* Active Filter Badges */}
+          {(debouncedQuery || selectedTagId) && (
+            <div className="active-filters-bar">
+              <span className="active-label">Active filters:</span>
+              {debouncedQuery && (
+                <span className="active-chip">
+                  Search: "{debouncedQuery}"
+                </span>
+              )}
+              {selectedTagName && (
+                <span className="active-chip">
+                  Genre: {selectedTagName}
                   <button
-                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                    disabled={page === 1}
+                    type="button"
+                    onClick={() => selectTag("", "")}
+                    className="chip-remove"
                   >
-                    Prev
+                    ✕
                   </button>
-                  <span>Page {page}</span>
-                  <button onClick={() => setPage((p) => p + 1)}>Next</button>
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="clear-all-link"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+
+          {/* Loading Skeleton */}
+          {loading && (
+            <div className="manga-grid">
+              {Array.from({ length: 12 }).map((_, idx) => (
+                <div key={idx} className="skeleton-card">
+                  <div className="skeleton-poster shimmer" />
+                  <div className="skeleton-line shimmer" />
+                  <div className="skeleton-subline shimmer" />
                 </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error State */}
+          {!loading && error && (
+            <div className="error-state-card">
+              <div className="error-icon">⚠️</div>
+              <h3>Unable to load manga catalog</h3>
+              <p>{error}</p>
+              <button type="button" className="retry-btn" onClick={refetch}>
+                🔄 Retry
+              </button>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && manga.length === 0 && (
+            <div className="empty-state-card">
+              <div className="empty-icon">🔍</div>
+              <h3>No manga found</h3>
+              <p>
+                We couldn't find any titles matching your search criteria. Try
+                broadening your keywords or removing filters.
+              </p>
+              <button
+                type="button"
+                className="reset-btn"
+                onClick={resetFilters}
+              >
+                Reset All Filters
+              </button>
+            </div>
+          )}
+
+          {/* Manga Grid */}
+          {!loading && !error && manga.length > 0 && (
+            <>
+              <div className="manga-grid">
+                {manga.map((item) => (
+                  <MangaCard key={item.id} manga={item} />
+                ))}
               </div>
 
-              <aside className="side">
-                <h2 className="section-title">Popular Manga</h2>
-                <div className="popular-manga">
-                  {completed.map((m) => (
-                    <Link key={m.id} to={`/manga/${m.id}`}>
-                      <div className="recent-item">
-                        <img
-                          src={getCover(m)}
-                          alt={m.title}
-                          className="recent-thumbnail"
-                        />
-                        <div className="recent-item-details">
-                          <h3>{m.title}</h3>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </aside>
+              {/* Responsive Pagination */}
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(p) => setPage(p)}
+              />
             </>
           )}
-        </div>
-      </main>
+        </main>
+
+        {/* Sidebar: Popular Completed Manga */}
+        <aside className="catalog-sidebar">
+          <div className="sidebar-card">
+            <h2 className="sidebar-title">
+              <span className="sidebar-title-icon">🔥</span> Top Completed
+            </h2>
+
+            {popularLoading && (
+              <div className="sidebar-loading">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <div key={idx} className="sidebar-skeleton-item shimmer" />
+                ))}
+              </div>
+            )}
+
+            {!popularLoading && (
+              <div className="popular-list">
+                {popular.map((item, index) => (
+                  <Link
+                    key={item.id}
+                    to={`/manga/${item.id}`}
+                    className="popular-item"
+                  >
+                    <span className={`rank-badge ${index < 3 ? `top-${index + 1}` : ""}`}>
+                      #{index + 1}
+                    </span>
+                    <img
+                      src={
+                        getMangaCoverUrl(item.id, item.coverFilename, "256") ||
+                        "/placeholder.jpg"
+                      }
+                      alt={item.title}
+                      className="popular-thumb"
+                      loading="lazy"
+                    />
+                    <div className="popular-meta">
+                      <h4 className="popular-title">{item.title}</h4>
+                      {item.tags && item.tags.length > 0 && (
+                        <span className="popular-tag">{item.tags[0]}</span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
     </div>
   );
-};
-
-export default MangaList;
+}

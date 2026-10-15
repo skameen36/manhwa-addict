@@ -1,17 +1,25 @@
 {
   "name": "manhwa-addict",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "parcel index.html",
-    "start": "npx parcel index.html",
-    "build": "parcel build index.html --dist-dir dist",
+    "dev": "parcel index.html --no-cache",
+    "start": "parcel index.html --no-cache",
+    "dev:proxy": "node api/dev-server.js",
+    "build": "parcel build index.html --dist-dir dist --no-cache",
     "clean": "rimraf .parcel-cache dist"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "manga",
+    "manhwa",
+    "mangadex",
+    "reader",
+    "react"
+  ],
+  "author": "Shaikh Ameen",
+  "license": "MIT",
+  "description": "Production-ready, responsive Manga & Manhwa reader web app powered by MangaDex API",
   "dependencies": {
     "framer-motion": "^12.4.0",
     "react": "^18.3.1",

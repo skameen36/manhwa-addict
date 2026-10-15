@@ -1,195 +1,134 @@
-# SKMangaNest
+# SKMangaNest — Premium Manga & Manhwa Web App
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)  
-[![React](https://img.shields.io/badge/Library-React-blue.svg)](https://reactjs.org/)  
-[![Parcel](https://img.shields.io/badge/Bundler-Parcel-important.svg)](https://parceljs.org/)  
-[![MangaDex API](https://img.shields.io/badge/API-MangaDex-orange.svg)](https://api.mangadex.org/)
+[![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://react.dev/)
+[![Parcel](https://img.shields.io/badge/Bundler-Parcel-important.svg)](https://parceljs.org/)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg)](https://vercel.com/)
+[![MangaDex API](https://img.shields.io/badge/API-MangaDex%20v5-orange.svg)](https://api.mangadex.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> A modern, responsive single‑page React app for browsing, searching and reading manga via the MangaDex API.  
-> Features live search, category (tag) filtering, light/dark theme toggle, and a polished developer‑info modal.
-
-
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <!-- Replace with actual screenshot links when available -->
-  <img src="https://placehold.co/400x250/E0E0E0/333333?text=Light+Mode" alt="Light Mode Screenshot" style="margin: 10px; border-radius: 8px;" />
-  <img src="https://placehold.co/400x250/333333/E0E0E0?text=Dark+Mode" alt="Dark Mode Screenshot" style="margin: 10px; border-radius: 8px;" />
-  <img src="https://placehold.co/400x250/A0A0A0/FFFFFF?text=Chapter+Reader" alt="Chapter Reader Screenshot" style="margin: 10px; border-radius: 8px;" />
-</p>
+> A modern, responsive, and high-performance single-page React web application for browsing, searching, and reading Manga, Manhwa, and Manhua powered by the official MangaDex API.
 
 ---
 
-## 🚀 Live Demo
+## 🌟 Key Features
 
-🌐 [Live Demo on Vercel — Deployed]
-
----
-
-## 📦 Deployment
-
-This project is configured for deployment on Vercel.
-
-### Prerequisites
-- Vercel account
-- MangaDex API credentials (optional, for enhanced features)
-
-### Deploy Steps
-1. Push your code to GitHub
-2. Connect your GitHub repo to Vercel
-3. Set environment variables in Vercel dashboard:
-   - `MANGADEX_API`: `https://api.mangadex.org/`
-   - `PARCEL_MANGADEX_CLIENT_ID`: Your MangaDex client ID
-   - Other credentials as needed
-4. Deploy!
-
-The `vercel.json` handles the build configuration and API routes.
-
-## ✨ Features
-
-* Recent Manga Updates
-* Popular Completed Manga
-* Instant Search & Client-side Filtering
-* Category (Tag) Filtering
-* Dark/Light Theme with Framer Motion
-* Chapter Reader with Lazy Image Loading
-* Responsive Layout & Clean UI
-* Developer Info Modal
-* API Caching for Optimized Performance
-* Pagination Support
+- **⚡ Live Global Search**: Instant debounced search querying the entire MangaDex catalog.
+- **🏷️ Genre & Tag Filtering**: Browse by categories (Action, Romance, Fantasy, Comedy, Martial Arts, etc.) with real-time tag search.
+- **🔥 Hero Spotlight Carousel**: Dynamic showcase highlighting top featured manga with synopsis, tags, and quick-read link.
+- **📜 Webtoon & Single-Page Chapter Reader**:
+  - MangaDex@Home distributed node integration for high-definition chapter images.
+  - Continuous vertical scroll mode (Webtoon) and classic Single-page reader mode.
+  - Interactive Chapter Selector dropdown to instantly jump to any chapter.
+  - Reading progress indicator and page retry fallbacks.
+- **🌓 Adaptive Theme Engine**: Smooth Dark Mode and Light Mode switching with system preference detection and animated hanging bulb toggle.
+- **📱 Fully Responsive**: Flawless experience across mobile smartphones, tablets, laptops, and ultra-wide desktop monitors.
+- **🚀 Vercel Production Ready**: Zero-config Vercel Serverless Functions (`/api/mangadex` & `/api/image-proxy`) providing server-side CORS resolution, in-flight request deduplication, and edge caching.
+- **👨‍💻 Developer Profile**: Interactive modal showcasing developer credentials, skills, and portfolio.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Architecture & Tech Stack
 
-| Tech             | Usage               |
-| :--------------- | :------------------ |
-| React 18         | Frontend Framework  |
-| Parcel           | Bundler             |
-| Vercel           | Hosting & Serverless |
-| MangaDex API     | Manga Data Source   |
-
-## 🔧 CORS Solution
-
-This project uses Vercel serverless functions to proxy all MangaDex API requests, solving CORS issues in production:
-
-- `/api/mangadex` - Proxies JSON API requests
-- `/api/image-proxy` - Proxies image requests
-
-This ensures reliable API access from any domain.
-| Parcel 2         | Bundler             |
-| React Router v6  | Routing             |
-| Framer Motion    | Theme Toggle Animations |
-| Tailwind CSS     | Styling + Custom Variables |
-| Context API      | State Management    |
-| MangaDex API     | Data Source (REST API) |
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | React 18 (Hooks, Context API, StrictMode) |
+| **Routing** | React Router v6 (Nested routes, SPA rewrites, ScrollRestoration) |
+| **Styling** | Modern CSS Design System (CSS Variables, Glassmorphism, Responsive Grid) |
+| **Animations** | Framer Motion (Theme toggle animations, smooth transitions) |
+| **Bundler** | Parcel 2 (`--no-cache` production builds) |
+| **Serverless Functions** | Vercel Serverless Node.js Functions (`/api/mangadex.js`, `/api/image-proxy.js`) |
+| **Data Source** | MangaDex API v5 REST Endpoints |
 
 ---
 
-## 🧑‍💻 Installation
+## 🔧 Solving Vercel Deployment & CORS
 
+Browsers enforce Cross-Origin Resource Sharing (CORS) rules that block direct client-side JavaScript requests to `https://api.mangadex.org` from custom domains.
+
+This application includes two dedicated Vercel Serverless Functions in the `/api` directory:
+
+1. **`/api/mangadex`**:
+   - Proxies JSON API requests server-to-server.
+   - Cleans base URLs and sanitizes endpoint query strings.
+   - Sends the mandatory MangaDex User-Agent header.
+   - Sets edge cache headers (`Cache-Control: public, s-maxage=300`) to respect API rate limits.
+2. **`/api/image-proxy`**:
+   - Proxies and caches cover art and chapter images when direct CDN access is restricted.
+   - Streams binary image buffers directly with proper Content-Type headers.
+
+---
+
+## 🚀 Deployment to Vercel
+
+Deploying to Vercel takes less than 2 minutes:
+
+### Step 1: Push Repository to GitHub
 ```bash
-git clone [https://github.com/your-username/SKMangaNest.git](https://github.com/your-username/SKMangaNest.git)
-cd SKMangaNest
+git add .
+git commit -m "Production-ready upgrade"
+git push origin main
+```
+
+### Step 2: Import into Vercel
+1. Log in to your [Vercel Dashboard](https://vercel.com/).
+2. Click **Add New Project** and select your repository.
+3. Vercel automatically detects the project configuration from `vercel.json`:
+   - **Build Command**: `parcel build index.html --dist-dir dist --no-cache`
+   - **Output Directory**: `dist`
+4. *(Optional)* Add Environment Variables in Vercel:
+   - `MANGADEX_API`: `https://api.mangadex.org`
+   - `MANGADEX_CLIENT_ID`: Your MangaDex client ID (if applicable)
+5. Click **Deploy**!
+
+---
+
+## 💻 Local Development Setup
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/skameen36/manhwa-addict.git
+cd manhwa-addict
+```
+
+### 2. Install dependencies
+```bash
 npm install
-npm start
+```
 
-Opens at: http://localhost:1234
+### 3. Run development server
+```bash
+npm run dev
+```
+> App runs at `http://localhost:1234`
 
-⚙️ Environment Variables (Optional)
-Only needed if you use login-based endpoints in the future:
+### 4. Run local API proxy (Optional)
+To test Vercel serverless functions locally without installing Vercel CLI:
+```bash
+npm run dev:proxy
+```
+> Proxy runs at `http://localhost:3000`
 
-Code snippet
+### 5. Build for production
+```bash
+npm run build
+```
 
-REACT_APP_MANGADEX_CLIENT_ID=your_client_id
-REACT_APP_MANGADEX_USERNAME=your_username
-REACT_APP_MANGADEX_PASSWORD=your_password
+---
 
+## 👤 Author
 
-🗂️ Project Structure
-MANHWA-ADDICT/
-├── .parcel-cache/
-├── backend/                   # Placeholder for future backend logic
-├── dist/                      # Parcel build output
-├── frontend/
-│   └── src/
-│       ├── assets/            # Static assets (icons, logos, etc.)
-│       ├── components/        # All UI components
-│       │   ├── AccessTokens.js
-│       │   ├── Bulb.js
-│       │   ├── DeveloperInfoModal.js
-│       │   ├── Header.js
-│       │   ├── Home.js
-│       │   ├── MangaChapter.js
-│       │   ├── Pagination.js
-│       │   └── SettingsModal.js
-│       ├── context/           # Context API for global state
-│       │   ├── SearchContext.js
-│       │   └── ThemeContext.js
-│       ├── hooks/             # Custom React hooks
-│       │   └── useManga.js
-│       ├── pages/             # Reserved for routed views (if added later)
-│       ├── utils/             # Helper functions and configs
-│       │   ├── App.js
-│       │   └── config.js
-├── node_modules/
-├── .env
-├── .gitignore
-├── index.css
-├── index.html
-├── package.json
-├── package-lock.json
-└── README.md
+**Shaikh Ameen**  
+*Software Associate – Frontend Developer*
 
-🧠 How It Works
-Data Fetching:
+- 📧 Email: [imameen36@gmail.com](mailto:imameen36@gmail.com)
+- 📞 Phone: +91 8625802122
+- 🔗 LinkedIn: [ameen-shaikh-972b2b233](https://www.linkedin.com/in/ameen-shaikh-972b2b233)
+- 💻 GitHub: [@skameen36](https://github.com/skameen36)
+- 📍 Location: Amravati, Maharashtra, India
 
-Uses fetchWithCache to avoid redundant API requests.
+---
 
-ThemeContext:
+## 📄 License
 
-Stores light/dark preference and syncs with localStorage.
-
-SearchContext:
-
-Stores search query and selected tag globally.
-
-Chapter Reader:
-
-Fetches chapter images using GET /at-home/server/{chapterId}
-
-Implements lazy loading with Intersection Observer.
-
-🛣️ Roadmap
-✅ Completed Manga & Recent Updates
-
-✅ Chapter Reading & Image Lazy Load
-
-✅ Tag Filtering & Search
-
-✅ Theme Switcher
-
-✅ Pagination Support
-
-⏳ Bookmark/Resume Reading
-
-⏳ User Auth for My List (Optional)
-
-⏳ Deploy to Vercel / Netlify
-
-📄 License
-This project is licensed under the MIT License — see the LICENSE file.
-
-🙋 Author
-Shaikh Ameen
-
-📧 imameen36@gmail.com
-
-🌐 LinkedIn | GitHub
-
-📍 Amravati, Maharashtra, India
-
-🔗 Why MangaDex API?
-We use the MangaDex open REST API to fetch all manga-related data, including covers, tags, chapters, and images — making this a pure frontend app with no server-side dependencies.
+This project is open-source and licensed under the [MIT License](LICENSE).
+Manga and images are property of their respective creators and scanlation teams via MangaDex.

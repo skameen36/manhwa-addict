@@ -1,47 +1,89 @@
-// File: api/image-proxy.js
-// This will be a Vercel Serverless Function.
-// Vercel automatically detects files in the 'api' directory as functions.
+// api/image-proxy.js
+// Vercel Serverless Function to proxy MangaDex covers and chapter images safely
 
-export default async (req, res) => {
-  // Extract the original image path from the Vercel Function request
-  // Example req.url: /api/image-proxy/covers/mangaId/filename.jpg
-  // We want: /covers/mangaId/filename.jpg or /data/hash/filename
-  const imagePath = req.url.replace("/api/image-proxy", ""); // Adjust this if your proxy path changes
+const ALLOWED_HOSTS = [
+  'uploads.mangadex.org',
+  'api.mangadex.org',
+  'mangadex.network',
+];
 
-  const mangadexImageUrl = `https://uploads.mangadex.org${imagePath}`;
+function isHostAllowed(hostname) {
+  return ALLOWED_HOSTS.some(allowed => 
+    hostname === allowed || hostname.endsWith(`.${allowed}`)
+  );
+}
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
-    // Fetch the image from MangaDex CDN
-    const response = await fetch(mangadexImageUrl);
+    let targetUrlString = '';
 
-    if (!response.ok) {
-      console.error(
-        `MangaDex CDN returned ${response.status} for ${mangadexImageUrl}`
-      );
-      // Send a fallback image or an error response
-      res.writeHead(response.status, { "Content-Type": "text/plain" });
-      res.end(
-        `Failed to fetch image from MangaDex CDN: ${response.statusText}`
-      );
-      return;
+    // Check if full URL provided in query
+    if (req.query?.url) {
+      targetUrlString = decodeURIComponent(String(req.query.url));
+    } else {
+      // Subpath extraction: /api/image-proxy/covers/... or req.query.path
+      const rawPath = req.query?.path || (req.url || '').replace(/^\/api\/image-proxy\/?/, '');
+      const cleanPath = String(rawPath).replace(/^\/+/, '');
+
+      if (!cleanPath) {
+        return res.status(400).json({ 
+          error: 'Missing image path or url',
+          usage: '/api/image-proxy?url=https://uploads.mangadex.org/covers/... or /api/image-proxy?path=covers/...'
+        });
+      }
+
+      if (/^https?:\/\//i.test(cleanPath)) {
+        targetUrlString = cleanPath;
+      } else {
+        targetUrlString = `https://uploads.mangadex.org/${cleanPath}`;
+      }
     }
 
-    // Get the content type from the MangaDex response headers
-    const contentType =
-      response.headers.get("content-type") || "application/octet-stream";
+    const targetUrl = new URL(targetUrlString);
+    if (!isHostAllowed(targetUrl.hostname)) {
+      return res.status(403).json({ error: 'Host not allowed for proxying' });
+    }
 
-    // Set appropriate headers for the response
-    res.writeHead(200, {
-      "Content-Type": contentType,
-      "Cache-Control": "public, max-age=31536000, immutable", // Cache images aggressively
-      "Access-Control-Allow-Origin": "*", // Allow CORS if needed
+    const response = await fetch(targetUrl.toString(), {
+      headers: {
+        'User-Agent': 'SKMangaNest/2.0 (https://github.com/skameen36/manhwa-addict)',
+        'Referer': 'https://mangadex.org/',
+      },
+      signal: AbortSignal.timeout(15000),
     });
 
-    // Pipe the image stream directly to the response
-    response.body.pipe(res);
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: `Failed to fetch image: ${response.statusText}`,
+        status: response.status
+      });
+    }
+
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=604800, immutable');
+    return res.status(200).send(buffer);
+
   } catch (error) {
-    console.error("Error proxying image:", error);
-    res.writeHead(500, { "Content-Type": "text/plain" });
-    res.end("Error proxying image.");
+    console.error('Image proxy error:', error);
+    return res.status(500).json({
+      error: 'Error proxying image',
+      message: error.message
+    });
   }
-};
+}
