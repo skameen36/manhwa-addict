@@ -5,7 +5,72 @@ import { SearchContext } from "../context/SearchContext";
 import { useManga, usePopularManga, useFeaturedManga } from "../hooks/useManga";
 import MangaCard from "./MangaCard";
 import Pagination from "./Pagination";
-import { getMangaCoverUrl } from "../utils/api";
+import { getMangaCoverUrl, getProxyImageUrl } from "../utils/api";
+
+const PLACEHOLDER_SVG = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='360' viewBox='0 0 256 360'%3E%3Crect width='256' height='360' fill='%23111827'/%3E%3Ctext x='50%25' y='50%25' fill='%238888aa' font-family='sans-serif' font-size='16' text-anchor='middle' dy='.3em'%3ENo Cover%3C/text%3E%3C/svg%3E";
+
+function HeroPoster({ manga }) {
+  const [src, setSrc] = useState(() => {
+    return getMangaCoverUrl(manga.id, manga.coverFilename, "512") || PLACEHOLDER_SVG;
+  });
+  const [triedProxy, setTriedProxy] = useState(false);
+
+  useEffect(() => {
+    setSrc(getMangaCoverUrl(manga.id, manga.coverFilename, "512") || PLACEHOLDER_SVG);
+    setTriedProxy(false);
+  }, [manga.id, manga.coverFilename]);
+
+  const handleError = () => {
+    if (!triedProxy && manga.coverFilename) {
+      setTriedProxy(true);
+      const direct = getMangaCoverUrl(manga.id, manga.coverFilename, "256");
+      setSrc(getProxyImageUrl(direct));
+    } else {
+      setSrc(PLACEHOLDER_SVG);
+    }
+  };
+
+  return (
+    <img
+      src={src}
+      alt={manga.title}
+      className="hero-poster"
+      onError={handleError}
+    />
+  );
+}
+
+function SidebarThumb({ manga }) {
+  const [src, setSrc] = useState(() => {
+    return getMangaCoverUrl(manga.id, manga.coverFilename, "256") || PLACEHOLDER_SVG;
+  });
+  const [triedProxy, setTriedProxy] = useState(false);
+
+  useEffect(() => {
+    setSrc(getMangaCoverUrl(manga.id, manga.coverFilename, "256") || PLACEHOLDER_SVG);
+    setTriedProxy(false);
+  }, [manga.id, manga.coverFilename]);
+
+  const handleError = () => {
+    if (!triedProxy && manga.coverFilename) {
+      setTriedProxy(true);
+      const direct = getMangaCoverUrl(manga.id, manga.coverFilename, "256");
+      setSrc(getProxyImageUrl(direct));
+    } else {
+      setSrc(PLACEHOLDER_SVG);
+    }
+  };
+
+  return (
+    <img
+      src={src}
+      alt={manga.title}
+      className="popular-thumb"
+      loading="lazy"
+      onError={handleError}
+    />
+  );
+}
 
 export default function Home() {
   const {
@@ -75,11 +140,7 @@ export default function Home() {
           </div>
           {heroItem.coverFilename && (
             <div className="hero-poster-wrap">
-              <img
-                src={getMangaCoverUrl(heroItem.id, heroItem.coverFilename, "512")}
-                alt={heroItem.title}
-                className="hero-poster"
-              />
+              <HeroPoster manga={heroItem} />
             </div>
           )}
         </section>
@@ -242,15 +303,7 @@ export default function Home() {
                     <span className={`rank-badge ${index < 3 ? `top-${index + 1}` : ""}`}>
                       #{index + 1}
                     </span>
-                    <img
-                      src={
-                        getMangaCoverUrl(item.id, item.coverFilename, "256") ||
-                        "/placeholder.jpg"
-                      }
-                      alt={item.title}
-                      className="popular-thumb"
-                      loading="lazy"
-                    />
+                    <SidebarThumb manga={item} />
                     <div className="popular-meta">
                       <h4 className="popular-title">{item.title}</h4>
                       {item.tags && item.tags.length > 0 && (

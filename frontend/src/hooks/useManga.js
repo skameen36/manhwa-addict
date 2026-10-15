@@ -115,7 +115,7 @@ export function useManga({
 
       // Language filter
       if (language && language !== "all") {
-        params.append("availableTranslatedLanguages[]", language);
+        params.append("availableTranslatedLanguage[]", language);
       }
 
       // Sorting
