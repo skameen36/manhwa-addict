@@ -1,5 +1,5 @@
 // frontend/src/utils/api.js
-// Centralized API client with smart caching, in-flight deduplication, and image URL builders
+// Centralized API client with smart caching, in-flight deduplication, and hybrid local/cloud routing
 
 const cache = new Map();
 const inFlightRequests = new Map();
@@ -8,57 +8,81 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
 export const API_BASE = '/api/mangadex';
 
 /**
- * Builds the proxy URL for a MangaDex API endpoint.
+ * Determines whether the current execution context is on localhost.
  */
-export function withBase(pathOrUrl) {
-  if (!pathOrUrl) return API_BASE;
-  if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
-
-  const clean = String(pathOrUrl).replace(/^\/+/, '');
-  return `${API_BASE}?path=${encodeURIComponent(clean)}`;
+function isLocalhost() {
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  return host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local');
 }
 
 /**
- * Fetches JSON from MangaDex proxy with timeout and informative errors.
+ * Builds candidate URLs for a MangaDex API endpoint.
+ * MangaDex natively allows CORS from http://localhost:* (making local Parcel dev work out of the box),
+ * while deployed domains (Vercel) route through the /api/mangadex serverless function.
  */
-async function fetchFromProxy(pathOrUrl) {
-  const url = withBase(pathOrUrl);
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
+export function getUrlsToTry(pathOrUrl) {
+  if (!pathOrUrl) return [];
+  if (/^https?:\/\//i.test(pathOrUrl)) return [pathOrUrl];
 
-  try {
-    const res = await fetch(url, {
-      headers: { Accept: 'application/json' },
-      signal: controller.signal,
-    });
+  const clean = String(pathOrUrl).replace(/^\/+/, '');
+  const directUrl = `https://api.mangadex.org/${clean}`;
+  const proxyUrl = `${API_BASE}?path=${encodeURIComponent(clean)}`;
 
-    clearTimeout(timeoutId);
+  // On localhost, prioritize direct MangaDex API (since MangaDex whitelists http://localhost:*)
+  // On deployed domains (like Vercel), prioritize the Vercel serverless function /api/mangadex
+  return isLocalhost() ? [directUrl, proxyUrl] : [proxyUrl, directUrl];
+}
 
-    const contentType = res.headers.get('content-type') || '';
-    if (!res.ok) {
-      const errorData = contentType.includes('application/json')
-        ? await res.json().catch(() => ({}))
-        : { details: await res.text().catch(() => '') };
+export function withBase(pathOrUrl) {
+  const urls = getUrlsToTry(pathOrUrl);
+  return urls[0] || pathOrUrl;
+}
 
-      const message = errorData.error || errorData.details || `HTTP ${res.status}`;
-      throw new Error(`API Error (${res.status}): ${message}`);
+/**
+ * Fetches JSON from candidate URLs with fallback, timeout, and descriptive error messages.
+ */
+async function fetchWithFallback(pathOrUrl) {
+  const urls = getUrlsToTry(pathOrUrl);
+  let lastError = null;
+
+  for (const url of urls) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
+
+    try {
+      const res = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      const contentType = res.headers.get('content-type') || '';
+
+      // If response is HTML (e.g. Parcel dev server returning index.html for unknown /api route)
+      if (contentType.includes('text/html')) {
+        throw new Error(`Endpoint returned HTML instead of JSON (${url})`);
+      }
+
+      if (!res.ok) {
+        const errorData = contentType.includes('application/json')
+          ? await res.json().catch(() => ({}))
+          : { details: await res.text().catch(() => '') };
+
+        const message = errorData.error || errorData.details || `HTTP ${res.status}`;
+        throw new Error(`API Error (${res.status}): ${message}`);
+      }
+
+      return await res.json();
+    } catch (err) {
+      clearTimeout(timeoutId);
+      lastError = err;
+      // Try next candidate URL in fallback list
     }
-
-    if (!contentType.includes('application/json')) {
-      const text = await res.text().catch(() => '');
-      throw new Error(
-        `Unexpected response format (${contentType || 'empty'}). Please ensure Vercel serverless functions are active. Snippet: ${text.slice(0, 100)}`
-      );
-    }
-
-    return await res.json();
-  } catch (err) {
-    clearTimeout(timeoutId);
-    if (err.name === 'AbortError') {
-      throw new Error('Request timed out. Please check your connection and try again.');
-    }
-    throw err;
   }
+
+  throw lastError || new Error(`Failed to fetch data for ${pathOrUrl}`);
 }
 
 /**
@@ -83,7 +107,7 @@ export async function fetchWithCache(pathOrUrl, { forceRefresh = false } = {}) {
 
   const promise = (async () => {
     try {
-      const data = await fetchFromProxy(pathOrUrl);
+      const data = await fetchWithFallback(pathOrUrl);
       cache.set(cacheKey, { data, timestamp: Date.now() });
       return data;
     } finally {
@@ -120,5 +144,6 @@ export function getChapterPageUrl(baseUrl, hash, filename, dataSaver = false) {
  */
 export function getProxyImageUrl(fullUrl) {
   if (!fullUrl) return '';
+  if (isLocalhost()) return fullUrl; // On localhost, direct images load natively
   return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
 }

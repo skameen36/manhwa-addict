@@ -138,7 +138,7 @@ export function useManga({
         setTotal(0);
       }
     } catch (err) {
-      console.error("useManga error:", err);
+      console.warn("useManga warning:", err);
       setError(err.message || "Failed to load manga catalog");
       setManga([]);
     } finally {
@@ -179,7 +179,7 @@ export function useFeaturedManga() {
           setFeatured(json.data.map(mapMangaItem));
         }
       })
-      .catch((err) => console.error("Featured manga error:", err))
+      .catch((err) => console.warn("Featured manga warning:", err))
       .finally(() => {
         if (isMounted) setLoading(false);
       });
@@ -209,7 +209,7 @@ export function usePopularManga() {
           setPopular(json.data.map(mapMangaItem));
         }
       })
-      .catch((err) => console.error("Popular manga error:", err))
+      .catch((err) => console.warn("Popular manga warning:", err))
       .finally(() => {
         if (isMounted) setLoading(false);
       });

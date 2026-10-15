@@ -84,7 +84,7 @@ export default function MangaChapters() {
         }
       })
       .catch((err) => {
-        console.error("Error fetching chapters:", err);
+        console.warn("Chapters fetch warning:", err);
         if (isMounted) setError(err.message || "Failed to load chapters");
       })
       .finally(() => {
@@ -125,7 +125,7 @@ export default function MangaChapters() {
         setError("Unable to retrieve page images for this chapter.");
       }
     } catch (err) {
-      console.error("Error fetching chapter pages:", err);
+      console.warn("Chapter pages fetch warning:", err);
       setError(err.message || "Failed to load chapter images");
       setPages([]);
     } finally {

@@ -57,7 +57,7 @@ export const SearchProvider = ({ children }) => {
           );
         setTags(sorted);
       })
-      .catch((err) => console.error("Error loading manga tags:", err));
+      .catch((err) => console.warn("Failed to load manga tags:", err));
   }, []);
 
   const selectTag = (tagId, tagName = "") => {

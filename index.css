@@ -1764,7 +1764,7 @@ button, input, select {
   }
   
   .app-content-body {
-    padding-top: 8.5rem;
+    padding-top: 11.5rem;
   }
   
   .desktop-celestial {
@@ -1782,6 +1782,10 @@ button, input, select {
 }
 
 @media (max-width: 600px) {
+  .app-content-body {
+    padding-top: 13.5rem;
+  }
+  
   .manga-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.85rem;
