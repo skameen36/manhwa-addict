@@ -34,6 +34,7 @@ export default function MangaCard({ manga }) {
           alt={manga.title}
           className={`poster-img ${loaded ? "loaded" : "loading"}`}
           loading="lazy"
+          referrerPolicy="no-referrer"
           onLoad={() => setLoaded(true)}
           onError={handleImageError}
         />

@@ -35,6 +35,7 @@ function HeroPoster({ manga }) {
       src={src}
       alt={manga.title}
       className="hero-poster"
+      referrerPolicy="no-referrer"
       onError={handleError}
     />
   );
@@ -67,6 +68,7 @@ function SidebarThumb({ manga }) {
       alt={manga.title}
       className="popular-thumb"
       loading="lazy"
+      referrerPolicy="no-referrer"
       onError={handleError}
     />
   );

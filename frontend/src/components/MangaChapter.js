@@ -387,6 +387,7 @@ function ReaderPage({ page, totalPages }) {
           alt={`Page ${page.index}`}
           className={`page-image ${isLoaded ? "loaded" : "hidden"}`}
           loading="lazy"
+          referrerPolicy="no-referrer"
           onLoad={() => setIsLoaded(true)}
           onError={handleError}
         />
