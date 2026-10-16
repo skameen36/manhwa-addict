@@ -92,79 +92,82 @@ export default function Header() {
                 )}
               </div>
 
-              {/* Genre Dropdown */}
-              <div className="genre-dropdown-wrap" ref={genreRef}>
-                <button
-                  type="button"
-                  className={`genre-btn ${selectedTagId ? "has-genre" : ""}`}
-                  onClick={() => setGenreOpen((prev) => !prev)}
-                >
-                  <span className="genre-icon">🏷️</span>
-                  <span className="genre-label">
-                    {selectedTagName || "Genres"}
-                  </span>
-                  <span className="dropdown-arrow">{genreOpen ? "▲" : "▼"}</span>
-                </button>
+              {/* Filter Controls: Genre & Sort */}
+              <div className="header-filter-pills">
+                {/* Genre Dropdown */}
+                <div className="genre-dropdown-wrap" ref={genreRef}>
+                  <button
+                    type="button"
+                    className={`genre-btn ${selectedTagId ? "has-genre" : ""}`}
+                    onClick={() => setGenreOpen((prev) => !prev)}
+                  >
+                    <span className="genre-icon">🏷️</span>
+                    <span className="genre-label">
+                      {selectedTagName || "Genres"}
+                    </span>
+                    <span className="dropdown-arrow">{genreOpen ? "▲" : "▼"}</span>
+                  </button>
 
-                {genreOpen && (
-                  <div className="genre-menu">
-                    <div className="genre-search-box">
-                      <input
-                        type="text"
-                        placeholder="Filter genres..."
-                        value={genreSearch}
-                        onChange={(e) => setGenreSearch(e.target.value)}
-                        autoFocus
-                      />
-                    </div>
+                  {genreOpen && (
+                    <div className="genre-menu">
+                      <div className="genre-search-box">
+                        <input
+                          type="text"
+                          placeholder="Filter genres..."
+                          value={genreSearch}
+                          onChange={(e) => setGenreSearch(e.target.value)}
+                          autoFocus
+                        />
+                      </div>
 
-                    <div className="genre-list">
-                      <button
-                        type="button"
-                        className={`genre-item ${!selectedTagId ? "selected" : ""}`}
-                        onClick={() => {
-                          selectTag("", "");
-                          setGenreOpen(false);
-                        }}
-                      >
-                        All Genres
-                      </button>
-
-                      {filteredTags.map((tag) => (
+                      <div className="genre-list">
                         <button
-                          key={tag.id}
                           type="button"
-                          className={`genre-item ${tag.id === selectedTagId ? "selected" : ""}`}
+                          className={`genre-item ${!selectedTagId ? "selected" : ""}`}
                           onClick={() => {
-                            selectTag(tag.id, tag.attributes.name.en);
+                            selectTag("", "");
                             setGenreOpen(false);
                           }}
                         >
-                          {tag.attributes.name.en}
+                          All Genres
                         </button>
-                      ))}
 
-                      {filteredTags.length === 0 && (
-                        <div className="genre-empty">No matching genre</div>
-                      )}
+                        {filteredTags.map((tag) => (
+                          <button
+                            key={tag.id}
+                            type="button"
+                            className={`genre-item ${tag.id === selectedTagId ? "selected" : ""}`}
+                            onClick={() => {
+                              selectTag(tag.id, tag.attributes.name.en);
+                              setGenreOpen(false);
+                            }}
+                          >
+                            {tag.attributes.name.en}
+                          </button>
+                        ))}
+
+                        {filteredTags.length === 0 && (
+                          <div className="genre-empty">No matching genre</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              {/* Sort Order Selector */}
-              <div className="sort-selector-wrap">
-                <select
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
-                  className="sort-select"
-                  title="Sort Order"
-                >
-                  <option value="latestUploadedChapter.desc">⚡ Latest Updates</option>
-                  <option value="followedCount.desc">🔥 Most Popular</option>
-                  <option value="rating.desc">⭐ Highest Rated</option>
-                  <option value="createdAt.desc">✨ Newly Added</option>
-                </select>
+                {/* Sort Order Selector */}
+                <div className="sort-selector-wrap">
+                  <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="sort-select"
+                    title="Sort Order"
+                  >
+                    <option value="latestUploadedChapter.desc">⚡ Latest Updates</option>
+                    <option value="followedCount.desc">🔥 Most Popular</option>
+                    <option value="rating.desc">⭐ Highest Rated</option>
+                    <option value="createdAt.desc">✨ Newly Added</option>
+                  </select>
+                </div>
               </div>
             </div>
           )}
