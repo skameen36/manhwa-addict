@@ -1,7 +1,29 @@
 // frontend/src/components/DeveloperInfoModal.js
-import React from "react";
+import React, { useEffect } from "react";
+
+const TECH_STACK = [
+  "React (18/19)",
+  "JavaScript (ES6+)",
+  "Tailwind CSS",
+  "GSAP Motion",
+  "Redux Toolkit",
+  "REST & Serverless",
+  "Playwright Testing",
+  "Vercel Deployment",
+  "Supabase",
+];
 
 export default function DeveloperInfoModal({ isOpen, onClose }) {
+  // Close on Escape key press
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -22,6 +44,7 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           ✕
         </button>
 
+        {/* Header: Name, Tagline & Location */}
         <div className="devinfo-header">
           <div className="devinfo-avatar">SA</div>
           <div>
@@ -29,12 +52,13 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
               Shaikh Ameen
             </h2>
             <p className="devinfo-title-text">
-              Software Associate – Frontend Developer
+              Frontend Engineer &amp; Creative UI Builder
             </p>
-            <span className="devinfo-badge">📍 Amravati, Maharashtra</span>
+            <span className="devinfo-badge">📍 Amravati, Maharashtra, India</span>
           </div>
         </div>
 
+        {/* Contact Links: Phone is blurred & non-callable */}
         <div className="devinfo-links">
           <a
             href="mailto:imameen36@gmail.com"
@@ -44,9 +68,18 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           >
             📧 imameen36@gmail.com
           </a>
-          <a href="tel:+918625802122" className="devinfo-link-chip">
-            📞 +91 8625802122
-          </a>
+
+          <div
+            className="devinfo-link-chip devinfo-phone-chip"
+            title="Direct phone calls are unavailable. Please connect via Email or LinkedIn."
+          >
+            <span>📞</span>
+            <span className="devinfo-phone-blurred" aria-label="Phone number hidden for privacy">
+              +91 8625802122
+            </span>
+            <span className="devinfo-phone-tag">No calls</span>
+          </div>
+
           <a
             href="https://www.linkedin.com/in/ameen-shaikh-972b2b233"
             target="_blank"
@@ -55,42 +88,56 @@ export default function DeveloperInfoModal({ isOpen, onClose }) {
           >
             🔗 LinkedIn Profile
           </a>
+
           <a
             href="https://github.com/skameen36"
             target="_blank"
             rel="noopener noreferrer"
             className="devinfo-link-chip"
           >
-            💻 GitHub / skameen36
+            💻 GitHub Profile
           </a>
         </div>
 
         <div className="devinfo-body">
-          <h3 className="section-label">Core Competencies</h3>
-          <div className="skills-cloud">
-            <span className="skill-pill">React 18</span>
-            <span className="skill-pill">JavaScript (ES6+)</span>
-            <span className="skill-pill">REST APIs & Serverless</span>
-            <span className="skill-pill">State Management</span>
-            <span className="skill-pill">Responsive Design</span>
-            <span className="skill-pill">Parcel & Webpack</span>
-            <span className="skill-pill">Tailwind CSS / Vanilla CSS</span>
-            <span className="skill-pill">Git & Vercel CI/CD</span>
+          {/* Bio Section */}
+          <div className="devinfo-bio-card">
+            <p className="devinfo-bio-text">
+              I build fast, interactive web applications focused on slick UI
+              transitions, clean component architecture, and solid network
+              performance. From complex enterprise portals and KPI dashboards
+              to data-heavy media readers handling tens of thousands of items,
+              I turn complex requirements into fluid, accessible user experiences.
+            </p>
           </div>
 
-          <h3 className="section-label">Key Highlights</h3>
-          <ul className="devinfo-list">
-            <li>Architected production-ready single-page application with React Router v6 and Context API.</li>
-            <li>Designed high-performance serverless proxies on Vercel to overcome cross-origin CORS limitations.</li>
-            <li>Optimized asset loading with lazy loading, in-flight deduplication, and intelligent TTL caching.</li>
-            <li>Crafted sleek responsive design with smooth animations and dark/light mode themes.</li>
-          </ul>
+          {/* Tech Stack & Core Competencies */}
+          <h3 className="section-label">Tech Stack &amp; Core Competencies</h3>
+          <div className="skills-cloud">
+            {TECH_STACK.map((tech) => (
+              <span key={tech} className="skill-pill">
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
 
+        {/* Footer: Current Status (Role & Education) */}
         <div className="devinfo-footer">
-          <span>
-            <strong>Experience:</strong> 2+ Years Professional Frontend
-          </span>
+          <div className="devinfo-footer-status">
+            <div className="devinfo-status-line">
+              <span>💼</span>
+              <span>
+                <strong>Role:</strong> Software Associate – Frontend Developer
+              </span>
+            </div>
+            <div className="devinfo-status-line">
+              <span>🎓</span>
+              <span>
+                <strong>Education:</strong> Master of Computer Applications (MCA)
+              </span>
+            </div>
+          </div>
           <button type="button" className="btn-close-accent" onClick={onClose}>
             Done
           </button>
